@@ -1,0 +1,460 @@
+create database TrabajoFinal_DB
+go
+
+use TrabajoFinal_DB
+go
+
+/* CREACION DE ENTIDADES*/
+
+create table Especialidad(
+Id_Especialidad char(3) primary key,
+Nombre varchar(20) not null
+)
+INSERT INTO Especialidad VALUES('123','Odontologia')
+INSERT INTO Especialidad VALUES('124','Odontologia')
+INSERT INTO Especialidad VALUES ('127', 'Implantología'); 
+INSERT INTO Especialidad VALUES ('128', 'Endodoncia'); 
+INSERT INTO Especialidad VALUES ('125', 'Ortodoncia')
+INSERT INTO Especialidad VALUES ('126', 'Periodoncia')
+INSERT INTO Especialidad VALUES ('129', 'Odontopediatría')
+SELECT * FROM Especialidad
+
+create table Paciente(
+Id_Paciente char(3) primary key,
+Telefono varchar(9) not null,
+Nombre varchar(20) not null,
+Apellido varchar(20) not null,	
+Edad int not null
+)
+INSERT INTO Paciente VALUES('001','987654321','Luiggi','Paredes',18)
+INSERT INTO Paciente VALUES('002','977654321','Cristopher','Zapata',23)
+INSERT INTO Paciente VALUES('003','967654321','Janet','Zapata',54)
+INSERT INTO Paciente VALUES('004','967654458','Karmen','Lopez',24)
+INSERT INTO Paciente VALUES ('005', '988654321', 'Ana', 'García', 30)
+INSERT INTO Paciente VALUES ('006', '977654322', 'Pedro', 'Díaz', 45)
+INSERT INTO Paciente VALUES ('007', '966654323', 'Laura', 'Martínez', 28)
+INSERT INTO Paciente VALUES ('008', '955654324', 'Javier', 'Fernández', 50)
+INSERT INTO Paciente VALUES ('009', '944654325', 'Marina', 'López', 35)
+
+SELECT * FROM Paciente
+
+create table Consultorio(
+Numero_Consultorio char(2) primary key,
+Tamanio int not null,
+Cantidad_De_Equipamiento int not null
+)
+INSERT INTO Consultorio VALUES('02', 120, 40)
+INSERT INTO Consultorio VALUES('03', 80, 30)
+INSERT INTO Consultorio VALUES('01', 150, 60)
+INSERT INTO Consultorio VALUES('04', 150, 70)
+INSERT INTO Consultorio VALUES('05', 110, 30)
+INSERT INTO Consultorio VALUES ('06', 90, 20)
+INSERT INTO Consultorio VALUES ('07', 100, 25)
+INSERT INTO Consultorio VALUES ('08', 110, 30)
+INSERT INTO Consultorio VALUES ('09', 120, 35)
+INSERT INTO Consultorio VALUES ('10', 130, 40)
+
+SELECT * FROM Consultorio
+
+
+/*DEPENDECIAS DE TABLA ESPECIALIDAD */
+create table Doctores(
+Id_Doctor char(3) primary key,
+Telefono varchar(9) not null,
+Nombre varchar(20) not null,
+Apellido varchar(20) not null,
+Id_Especialidad char(3) references Especialidad
+)
+INSERT INTO Doctores VALUES('001','987456321','Percy','Zamora','123')
+INSERT INTO Doctores VALUES('002','957456321','Marco','Noriega','124')
+INSERT INTO Doctores VALUES('003','967426321','Rodolfo','Martinez','124')
+INSERT INTO Doctores VALUES('004','967426123','Luis','Mendez','123')
+INSERT INTO Doctores VALUES ('005', '966456321', 'Luis', 'Hernández', '128')
+INSERT INTO Doctores VALUES ('006', '955456321', 'Carla', 'Ruiz', '129')
+INSERT INTO Doctores VALUES ('007', '944456321', 'Mario', 'Sánchez', '127')
+INSERT INTO Doctores VALUES ('008', '933456321', 'Sofía', 'Gómez', '125')
+INSERT INTO Doctores VALUES ('009', '922456321', 'Andrea', 'Pérez', '126')
+
+SELECT * FROM Doctores
+
+
+create table Tratamiento(
+Id_Tratamiento char(3) primary key,
+Nombre varchar(50) not null,
+Id_Especialidad char(3) references Especialidad,
+Costo Numeric (5,2) not null
+)
+INSERT INTO Tratamiento VALUES('001','Endodoncia','123',340.40)
+INSERT INTO Tratamiento VALUES('002','Blanqueamiento','124',240.10)
+INSERT INTO Tratamiento VALUES('003','Extraccion','124',50.20)
+INSERT INTO Tratamiento VALUES ('004', 'Limpieza Profesional', '125', 200.00)
+INSERT INTO Tratamiento VALUES ('005', 'Extracción de Muela del Juicio', '128', 150.00)
+INSERT INTO Tratamiento VALUES ('006', 'Implante Dental', '127', 800.00)
+INSERT INTO Tratamiento VALUES ('007', 'Ortodoncia Invisible', '125', 250.00)
+INSERT INTO Tratamiento VALUES ('008', 'Selladores Dentales', '129', 120.00)
+INSERT INTO Tratamiento VALUES('009','Endodoncia','123',340.40)
+
+SELECT * FROM Tratamiento
+
+/*DEPENDECIAS SOLO DE TABLA  PACIENTE */
+
+create table Historial_Medico(
+Numero_Historial char(3) primary key,
+Alergias varchar(50) not null,
+Id_Paciente char(3) references Paciente
+)
+INSERT INTO Historial_Medico VALUES('002','Anestesia','001')
+INSERT INTO Historial_Medico VALUES('003','Ninguna','002')
+INSERT INTO Historial_Medico VALUES('001','Ninguna','003')
+INSERT INTO Historial_Medico VALUES ('004', 'Ninguna', '004')
+INSERT INTO Historial_Medico VALUES ('005', 'Alergia a la penicilina', '005')
+INSERT INTO Historial_Medico VALUES ('006', 'Hipertensión', '006')
+INSERT INTO Historial_Medico VALUES ('007', 'Asma', '007')
+INSERT INTO Historial_Medico VALUES ('008', 'Diabetes', '008')
+
+SELECT * FROM Historial_Medico
+
+
+create table Comprobante (
+Numero_Comprobante char(3) primary key,
+Monto_Total Numeric(7,2) not null,
+Id_Paciente char(3) references Paciente	
+)
+INSERT INTO Comprobante VALUES('021',340.40,'001')
+INSERT INTO Comprobante VALUES('022',240.10,'002')
+INSERT INTO Comprobante VALUES('019',50.20,'003')
+INSERT INTO Comprobante VALUES ('023', 150.00, '005')
+INSERT INTO Comprobante VALUES ('024', 800.00, '006')
+INSERT INTO Comprobante VALUES ('025', 2500.00, '007')
+INSERT INTO Comprobante VALUES ('026', 120.00, '008')
+INSERT INTO Comprobante VALUES ('027', 200.00, '004')
+SELECT * FROM Comprobante
+
+
+/*DEPENDECIA DE TABLA DOCTORES  */
+create table Personal_De_Apoyo(
+Id_PersonalA char(3) primary key,
+Telefono varchar(9) not null,
+Nombre varchar(20) not null,
+Apellido varchar(20) not null,
+Funcion varchar(30) not null,
+Supervision char(3) references Doctores
+)
+INSERT INTO Personal_De_Apoyo VALUES('021','987612345','Antonio','Raimondi', 'Apoyo en endodoncias','001')
+INSERT INTO Personal_De_Apoyo VALUES('022','977614145','Ariana','Mejia', 'Facilitar instrumental dental','001')
+INSERT INTO Personal_De_Apoyo VALUES('023','989612345','Juana','Rabanal', 'Apoyo en endodoncias','002')
+INSERT INTO Personal_De_Apoyo VALUES ('024', '988612345', 'Lucía', 'Martín', 'Apoyo en ortodoncia', '009')
+INSERT INTO Personal_De_Apoyo VALUES ('025', '977614445', 'Fernando', 'González', 'Asistencia en implantes', '008')
+INSERT INTO Personal_De_Apoyo VALUES ('026', '989612645', 'Natalia', 'García', 'Apoyo en periodoncia', '007')
+INSERT INTO Personal_De_Apoyo VALUES ('027', '987612845', 'Eduardo', 'Pérez', 'Estérilización de instrumentos', '006')
+INSERT INTO Personal_De_Apoyo VALUES ('028', '977612745', 'Marcela', 'López', 'Asistencia en ortodoncia', '003')
+
+SELECT * FROM Personal_De_Apoyo
+
+/*DEPENDECIA DE TABLA  PACIENTE,DOCTORES Y CONSULTORIO */
+create table Turno_De_Atencion(
+Id_Turno char(3) primary key,
+Hora TIME(5) not null,
+Fecha date not null,
+Id_Doctor char(3) references Doctores,
+Id_Paciente char(3) references Paciente,
+Numero_Consultorio char(2) references Consultorio
+)
+INSERT INTO Turno_De_Atencion VALUES('001','11:30', '2024-02-14','001','001', '01')
+INSERT INTO Turno_De_Atencion VALUES('002','12:30', '2024-02-14','002','002', '02')
+INSERT INTO Turno_De_Atencion VALUES('003','16:30', '2024-02-14','003','003', '03')
+INSERT INTO Turno_De_Atencion VALUES('004','14:30', '2024-05-14','004','004', '05')
+INSERT INTO Turno_De_Atencion VALUES ('005', '10:00', '2024-02-20', '006', '005', '07')
+INSERT INTO Turno_De_Atencion VALUES ('006', '11:00', '2024-02-21', '007', '006', '08')
+INSERT INTO Turno_De_Atencion VALUES ('007', '12:00', '2024-02-22', '008', '007', '09')
+INSERT INTO Turno_De_Atencion VALUES ('008', '13:00', '2024-02-23', '009', '008', '10')
+INSERT INTO Turno_De_Atencion VALUES ('009', '14:00', '2024-02-24', '002', '009', '08')
+INSERT INTO Turno_De_Atencion VALUES ('010', '10:00', '2024-09-24', '006', '001', '07')
+INSERT INTO Turno_De_Atencion VALUES ('011', '11:00', '2024-09-01', '003', '002', '07')
+INSERT INTO Turno_De_Atencion VALUES ('012','14:10', '2024-05-11','001','004', '05')
+INSERT INTO Turno_De_Atencion VALUES ('013', '10:00', '2024-02-12', '002', '007', '09')
+INSERT INTO Turno_De_Atencion VALUES ('014', '01:00', '2024-08-22', '008', '004', '09')
+
+SELECT * FROM Turno_De_Atencion
+
+
+/*DEPENDECIA DE TABLA  HISTORIAL MEDICO Y TRATAMIENTOS */
+create table Detalle_Historial(
+Id_Detalle_Historial char(3) primary key,
+Diagnosticos varchar(50) not null,
+Numero_Historial char(3) references Historial_Medico,
+Id_Tratamiento char(3) references Tratamiento
+)
+INSERT INTO Detalle_Historial VALUES('001','Caries','002','001')
+INSERT INTO Detalle_Historial VALUES('002','Denticion amarilla','003','002')
+INSERT INTO Detalle_Historial VALUES('003','Caries avanzada','001','003')
+INSERT INTO Detalle_Historial VALUES ('004', 'Revisión de rutina', '005', '004')
+INSERT INTO Detalle_Historial VALUES ('005', 'Extracción de muela', '006', '005')
+INSERT INTO Detalle_Historial VALUES ('006', 'Limpieza dental', '007', '006')
+INSERT INTO Detalle_Historial VALUES ('007', 'Implante dental', '008', '007')
+INSERT INTO Detalle_Historial VALUES ('008', 'Tratamiento de ortodoncia', '008', '008')
+
+SELECT * FROM Detalle_Historial
+
+
+/*DEPENDECIAS DE CONSULTORIO */
+create table Materiales_Medicamentos(
+Kardex char(3) primary key,
+Marca varchar(20) not null,
+Cantidad int not null,
+Costo Numeric(5,2) not null,
+Numero_Consultorio char(2) references Consultorio
+)
+INSERT INTO Materiales_Medicamentos VALUES('002','Vitis',5,102.40,'01')
+INSERT INTO Materiales_Medicamentos VALUES('001','Dentaflux',8,142.10,'02')
+INSERT INTO Materiales_Medicamentos VALUES('003','Cardiva',2,80.60,'03')
+INSERT INTO Materiales_Medicamentos VALUES ('004', 'Oral-B', 15, 120.00, '04')
+INSERT INTO Materiales_Medicamentos VALUES ('005', 'Listerine', 10, 90.00, '05')
+INSERT INTO Materiales_Medicamentos VALUES ('006', 'Sensodyne', 8, 150.00, '06')
+INSERT INTO Materiales_Medicamentos VALUES ('007', 'Paracetamol', 20, 50.00, '07')
+INSERT INTO Materiales_Medicamentos VALUES ('008', 'Ibuprofeno', 25, 60.00, '08')
+
+SELECT * FROM Materiales_Medicamentos
+
+
+create table Equipamiento(
+Id_Equipamiento char(3) primary key,
+Marca varchar(20) not null,
+Modelo varchar(20) not null,
+Tiempo_Usado date not null,
+Cantidad int not null,
+Numero_Consultorio char(2) references Consultorio
+)
+INSERT INTO Equipamiento VALUES('001','Moderna', 'Xtest', '2024-02-14', 2, '01')
+INSERT INTO Equipamiento VALUES('002','Tobishi', 'Skema III', '2022-05-23', 3, '02')
+INSERT INTO Equipamiento VALUES('003','EDAN', 'H100B', '2021-11-26', 30, '03')
+INSERT INTO Equipamiento VALUES ('004', 'Sirona', 'G200', '2023-07-15', 2, '07')
+INSERT INTO Equipamiento VALUES ('005', 'Kavo', 'Estetica E70', '2023-05-10', 3, '08')
+INSERT INTO Equipamiento VALUES ('006', 'Bien-Air', 'Chiropro L', '2023-06-20', 4, '09')
+INSERT INTO Equipamiento VALUES ('007', 'Anthos', 'Luna', '2023-08-05', 1, '10')
+INSERT INTO Equipamiento VALUES ('008', 'Planmeca', 'ProMax', '2023-09-15', 2, '10')
+
+SELECT * FROM Equipamiento
+
+
+/*DEPENDECIAS DE TABLA COMPROBANTE */
+create table Contado(
+Numero_Comprobante char(3) references Comprobante,
+Monto_Total Numeric(7,2) not null,
+Primary Key(Numero_Comprobante)
+)
+INSERT INTO Contado VALUES('021', 340.40)
+INSERT INTO Contado VALUES('022', 240.10)
+INSERT INTO Contado VALUES('019', 50.20)
+INSERT INTO Contado VALUES('023', 300.40)
+INSERT INTO Contado VALUES('024', 200.10)
+INSERT INTO Contado VALUES('025', 150.20)
+INSERT INTO Contado VALUES('026', 340.10)
+INSERT INTO Contado VALUES('027', 80.20)
+
+SELECT * FROM Contado
+
+
+create table Financiamiento(
+Numero_Comprobante char(3) references Comprobante,
+Numero_Cuotas int not null,
+Costo_Cuota Numeric(7,2) not null,
+Monto_Total Numeric(7,2) not null,
+Primary Key(Numero_Comprobante)
+)
+/*CONSIDERANDO INTERÉS DE LA CUOTA (+1.4%)*/
+INSERT INTO Financiamiento VALUES('021', 4, 86.29, 345.17)
+INSERT INTO Financiamiento VALUES('022', 3, 81.15, 243.46)
+INSERT INTO Financiamiento VALUES('019', 2, 25.45, 50.90)
+INSERT INTO Financiamiento VALUES ('023', 6, 35.00, 210.00)
+INSERT INTO Financiamiento VALUES ('024', 4, 40.00, 160.00)
+INSERT INTO Financiamiento VALUES ('025', 10, 85.00, 850.00)
+INSERT INTO Financiamiento VALUES ('026', 12, 220.00, 2640.00)
+INSERT INTO Financiamiento VALUES ('027', 3, 45.00, 135.00)
+
+SELECT * FROM Financiamiento
+
+
+/*DEPENDECIA DE TABLA DOCTORES, TRATAMIENTO Y COMPROBANTE*/
+create table Detalle_Comprobante(
+Numero_Comprobante char(3) references Comprobante,
+Id_Tratamiento char(3) references Tratamiento,
+Id_Doctor char(3) references Doctores,
+primary key(Numero_Comprobante,Id_Tratamiento)
+)
+INSERT INTO Detalle_Comprobante VALUES('021', '001', '001')
+INSERT INTO Detalle_Comprobante VALUES('022', '002', '002')
+INSERT INTO Detalle_Comprobante VALUES('019', '003', '003')
+INSERT INTO Detalle_Comprobante VALUES ('023', '004', '006')
+INSERT INTO Detalle_Comprobante VALUES ('024', '005', '007')
+INSERT INTO Detalle_Comprobante VALUES ('025', '006', '008')
+INSERT INTO Detalle_Comprobante VALUES ('026', '007', '009')
+INSERT INTO Detalle_Comprobante VALUES ('027', '008', '004')
+
+SELECT * FROM Detalle_Comprobante
+
+
+/*UPDATE*/
+/*aumentar en 10 el equipamiento de los consultarios que su tamaño se mayor a 120*/
+UPDATE Consultorio
+SET Cantidad_De_Equipamiento = Cantidad_De_Equipamiento + 10
+WHERE Tamanio > 120;
+
+SELECT * FROM Consultorio
+
+/*CONSULTA MULTITABLAS*/
+/*MUESTRA A LOS PACIENTES CON SU ALERGIA Y TRATAMIENTO REALIZAD0*/
+SELECT P.Nombre AS Nombre_Paciente,P.Apellido AS Apellido_Paciente,H.Alergias,T.Nombre AS Tratamiento,T.Costo AS Costo_Tratamiento
+FROM Paciente P
+JOIN Historial_Medico H ON P.Id_Paciente = H.Id_Paciente
+JOIN Detalle_Historial DH ON H.Numero_Historial = DH.Numero_Historial
+JOIN Tratamiento T ON DH.Id_Tratamiento = T.Id_Tratamiento;
+GO
+
+/*muestra los turno de cada doctor segun la fecha y hora, en que cunsultorio esta dispoinible y el equipamiento de dicho consuktorio*/
+SELECT T.Fecha,T.Hora,D.Nombre AS Nombre_Doctor,D.Apellido AS Apellido_Doctor,
+C.Tamanio AS Tamanio_Consultorio,
+C.Cantidad_De_Equipamiento AS Equipamiento_Consultorio
+FROM Turno_De_Atencion T
+JOIN Doctores D ON T.Id_Doctor = D.Id_Doctor
+JOIN Consultorio C ON T.Numero_Consultorio = C.Numero_Consultorio;
+GO
+
+/*condiciones*/
+/*muestra los pacientes que no tienen alergias*/
+SELECT P.Nombre,P.Apellido, HM.Alergias
+FROM Paciente P
+INNER JOIN Historial_Medico HM ON P.Id_Paciente = HM.Id_Paciente
+WHERE HM.Alergias = 'Ninguna';
+GO
+
+/*muestra a los doctores especializados en ortodoncia*/
+SELECT D.Nombre AS Nombre_Doctor,D.Apellido AS Apellido_Doctor,E.Nombre AS Especialidad
+FROM Doctores D
+INNER JOIN Especialidad E ON D.Id_Especialidad = E.Id_Especialidad
+WHERE E.Nombre = 'Ortodoncia';
+GO
+
+/*funciones**/
+
+/*calcula la cantidad de doctores visitados por cada paciente y el total gastado por cada paciente*/
+SELECT P.Nombre AS 'Nombre_Paciente',P.Apellido AS 'Apellido_Paciente',
+COUNT(DISTINCT T.Id_Doctor) AS 'Cantidad_Doctores_Visitados',
+SUM(C.Monto_Total) AS 'Total_Gastado'
+FROM  Paciente P
+INNER JOIN Turno_De_Atencion T ON P.Id_Paciente = T.Id_Paciente
+INNER JOIN Comprobante C ON P.Id_Paciente = C.Id_Paciente
+GROUP BY P.Nombre, P.Apellido;
+GO
+
+/*mostrar la edad promedio de los pacientes, ademas de su edad maximo y minina, tambien la especialidad que a ido cada paciente*/
+SELECT E.Nombre AS 'Especialidad',
+AVG(P.Edad) AS 'Edad_Promedio',
+MAX(P.Edad) AS 'Edad_Maxima',
+MIN(P.Edad) AS 'Edad_Minima',
+SUM(P.Edad) AS 'Edad_Total',
+COUNT(*) AS 'Cantidad_Pacientes'
+FROM Especialidad E
+INNER JOIN Doctores D ON E.Id_Especialidad = D.Id_Especialidad
+INNER JOIN Turno_De_Atencion T ON D.Id_Doctor = T.Id_Doctor
+INNER JOIN Paciente P ON T.Id_Paciente = P.Id_Paciente
+GROUP BY E.Nombre;
+GO
+
+/*VISTAS*/
+
+-- Vista para almacenar los campos de los tratamientos con un costo entre 50 y 3000
+CREATE VIEW Vista_TratamientosCosto AS
+SELECT Id_Tratamiento,Nombre,Id_Especialidad,Costo
+FROM Tratamiento
+SELECT * FROM Vista_TratamientosCosto
+WHERE Costo BETWEEN 50 AND 300;
+GO
+
+/*Vista de Pacientes Mayores de 30 años*/
+CREATE VIEW Vista_Pacientes AS
+SELECT  Id_Paciente,Nombre,Apellido,Edad
+FROM Paciente
+
+SELECT * FROM Vista_Pacientes
+WHERE Edad > 30;
+GO
+
+/*Vista de Especialidades NUEVA VISTA*/ 
+CREATE VIEW Especialides as
+select Id_Especialidad,Nombre
+from Especialidad
+
+Select * from Especialides
+go
+	
+
+/*Vista de Turnos de paciente , horario y doctor asignado */
+CREATE VIEW Turnos_por_Paciente_View AS
+SELECT P.Id_Paciente, P.Nombre AS Nombre_Paciente, P.Apellido AS Apellido_Paciente,
+T.Hora, T.Fecha,
+D.Nombre AS Nombre_Doctor, D.Apellido AS Apellido_Doctor,
+C.Numero_Consultorio
+FROM Paciente P
+INNER JOIN Turno_De_Atencion T ON P.Id_Paciente = T.Id_Paciente
+INNER JOIN Doctores D ON T.Id_Doctor = D.Id_Doctor
+INNER JOIN Consultorio C ON T.Numero_Consultorio = C.Numero_Consultorio;
+
+select * from Turnos_por_Paciente_View
+go
+
+/*Vista de Doctores con personal de apoyo respectivo */
+CREATE VIEW Personal_por_Doctor_ AS
+SELECT D.Id_Doctor, D.Nombre AS Nombre_Doctor, D.Apellido AS Apellido_Doctor,
+PA.Id_PersonalA, PA.Nombre AS Nombre_Personal, PA.Apellido AS Apellido_Personal,
+PA.Funcion
+FROM Doctores D
+INNER JOIN Personal_De_Apoyo PA ON D.Id_Doctor = PA.Supervision;
+
+select * from Personal_por_Doctor_
+go
+
+
+
+/*procedimiemtos almacenados*/
+/*devolver el hictorial clinico de un paciente*/
+
+CREATE PROC Consultar_Historial_Medico
+@Id_Paciente char(3)
+AS
+SELECT HM.Numero_Historial, HM.Alergias, P.Nombre, P.Apellido
+FROM Historial_Medico HM
+INNER JOIN Paciente P ON HM.Id_Paciente = P.Id_Paciente
+WHERE HM.Id_Paciente = @Id_Paciente;
+
+exec Consultar_Historial_Medico '002'
+go
+
+/*Procedimiento Almacenado para Obtener Detalles del comprobante ingresa el numero del comprobante
+y se muestren el tratamiento que se hizo y el precio*/
+CREATE PROC DetallesComprobante
+@Numero_Comprobante char(3)
+AS
+SELECT T.Nombre AS NombreTratamiento, T.Costo AS CostoTratamiento
+FROM Detalle_Comprobante DC
+INNER JOIN Tratamiento T ON DC.Id_Tratamiento = T.Id_Tratamiento
+WHERE DC.Numero_Comprobante = @Numero_Comprobante;
+
+
+EXEC DetallesComprobante @Numero_Comprobante = '027';
+go
+
+/* muestre el nombre del paciente y doctor ademas de la fecha de la consulta y la especialidad del doctor*/
+CREATE PROCEDURE ConsultasPorPaciente
+@Id_Paciente char(3)
+AS
+SELECT T.Fecha, P.Nombre AS NombrePaciente, D.Nombre AS NombreDoctor, E.Nombre AS EspecialidadDoctor
+FROM Turno_De_Atencion T
+INNER JOIN Paciente P ON T.Id_Paciente = P.Id_Paciente
+INNER JOIN Doctores D ON T.Id_Doctor = D.Id_Doctor
+INNER JOIN Especialidad E ON D.Id_Especialidad = E.Id_Especialidad
+WHERE T.Id_Paciente = @Id_Paciente;
+
+
+EXEC ConsultasPorPaciente @Id_Paciente = '004';
+go
